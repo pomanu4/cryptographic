@@ -1,9 +1,14 @@
 package ua.company.project.encrypting;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.InvalidAlgorithmParameterException;
@@ -16,6 +21,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Security;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -44,7 +53,10 @@ import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import javax.xml.crypto.dsig.spec.TransformParameterSpec;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.PEMReader;
 import org.bouncycastle.openssl.PasswordFinder;
 import org.w3c.dom.Document;
@@ -130,13 +142,44 @@ public class RSAkeyGenerator {
             };
         try(PEMReader reader = new PEMReader(new InputStreamReader(new FileInputStream(path.toFile())), finder);) {
             PrivateKey privK = null;
-            KeyPair pair = (KeyPair) reader.readObject();
-            privK = pair.getPrivate();
+            
+            /// caution on key header, need exakly ----RSA privatr key----
+//            KeyPair pair = (KeyPair) reader.readObject();
+//            privK = pair.getPrivate();
+            /// caution on key header, need exakly ----privatr key----
+                privK = (PrivateKey)reader.readObject();
             return privK;   
         } catch (IOException ex) {
             return null;
         }
     }
+    
+    public PrivateKey getPrivateRSAkeyFromFile(String filePath){
+        Security.addProvider(new BouncyCastleProvider());
+        Path path = Paths.get(filePath);
+        final String privateKeyPassword = null;
+        PasswordFinder finder = () -> {
+                if (privateKeyPassword != null) {
+                    return privateKeyPassword.toCharArray();
+                } else {
+                    return new char[0];
+                }
+            };
+        try(PEMReader reader = new PEMReader(new InputStreamReader(new FileInputStream(path.toFile())), finder);) {
+            PrivateKey privK = null;
+            
+            /// caution on key header, need exakly ----RSA privatr key----
+            KeyPair pair = (KeyPair) reader.readObject();
+            privK = pair.getPrivate();
+            /// caution on key header, need exakly ----privatr key----
+//                privK = (PrivateKey)reader.readObject();
+            return privK;   
+        } catch (IOException ex) {
+            return null;
+        }
+    }
+    
+    
     
     public PublicKey getPublicKeyFromFile(String filePath){
         Security.addProvider(new BouncyCastleProvider());
@@ -175,16 +218,7 @@ public class RSAkeyGenerator {
         DOMSignContext context = new DOMSignContext(privK, document.getDocumentElement());
         
         XMLSignature.sign(context);
-        byte[] b = new byte[1024];
-        info.getCanonicalizedData().read(b);
-        String can = new String(b, "utf-8").trim();
-        System.out.println(can);
-       
         
-        byte[] value = XMLSignature.getSignatureValue().getValue();
-        byte[] encode = Base64.getEncoder().encode(value);
-        String str = new String(encode, "utf-8");
-//        System.out.println(str);
         return DocUtill.documentToString(document);
     }
     
@@ -223,5 +257,17 @@ public class RSAkeyGenerator {
         return doFinal;
     }
     
-    
+    public X509Certificate getCertificate(String certFilePath){
+        try {
+            byte[] all = Files.readAllBytes(Paths.get(certFilePath));
+//            byte[] decoded = Base64.getDecoder().decode(all);
+            CertificateFactory factory = CertificateFactory.getInstance("X.509");
+            X509Certificate cert = (X509Certificate)factory.generateCertificate(new ByteArrayInputStream(all));
+            return cert;
+        } catch (IOException | CertificateException ex) {
+            Logger.getLogger(RSAkeyGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+     
 }

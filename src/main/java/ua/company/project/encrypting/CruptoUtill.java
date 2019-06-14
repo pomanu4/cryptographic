@@ -6,6 +6,9 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
@@ -49,6 +52,29 @@ public class CruptoUtill {
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
             Logger.getLogger(CruptoUtill.class.getName()).log(Level.SEVERE, null, ex);
             return null;
+        }
+    }
+    
+    public String sign(String message,  PrivateKey privateKey) throws SignatureException {
+        try {
+            Signature sign = Signature.getInstance("SHA1withRSA");
+            sign.initSign(privateKey);
+            sign.update(message.getBytes("utf-8"));
+            return java.util.Base64.getEncoder().encodeToString(sign.sign());
+        } catch (Exception ex) {
+            throw new SignatureException(ex);
+        }
+    }
+    
+    public boolean verify(String message, String signature, PublicKey publicKey) throws SignatureException {
+        try {
+            Signature sign = Signature.getInstance("SHA1withRSA");
+
+            sign.initVerify(publicKey);
+            sign.update(message.getBytes("utf-8"));
+            return sign.verify(Base64.getDecoder().decode(signature.getBytes("utf-8")));
+        } catch (Exception ex) {
+            throw new SignatureException(ex);
         }
     }
     
