@@ -60,7 +60,9 @@ public class CruptoUtill {
             Signature sign = Signature.getInstance("SHA1withRSA");
             sign.initSign(privateKey);
             sign.update(message.getBytes("utf-8"));
-            return java.util.Base64.getEncoder().encodeToString(sign.sign());
+            byte[] sign1 = sign.sign();
+            
+            return java.util.Base64.getEncoder().encodeToString(sign1);
         } catch (Exception ex) {
             throw new SignatureException(ex);
         }

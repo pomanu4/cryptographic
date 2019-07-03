@@ -86,18 +86,28 @@ Security.addProvider(new BouncyCastleProvider());
     PrivateKey prK = rsag.getPrivateKeyFromFile("D:\\garbage\\CMStest\\private.pem");
     X509Certificate cert = rsag.getCertificate("D:\\garbage\\CMStest\\cert.pem");
     PublicKey pubK = rsag.getPublicKeyFromFile("D:\\garbage\\CMStest\\pubkey.pem");
+    PublicKey pubKK = rsag.getPublicKeyFromFile("D:\\garbage\\CMStest\\publicKey.pem");
+    PrivateKey prKK = rsag.getPrivateRSAkeyFromFile("D:\\garbage\\CMStest\\privateKey.pem");
         
         CMScrypto cms = new CMScrypto();
-        byte[] cr = cms.getCryptoMessage("hello kitty", cert, prK, pubK);
+//        byte[] cr = cms.getCryptoMessage("hello kitty", cert, prKK, pubK);
         
         
-        
-        
-        ///retrive object from byte array
-        ContentInfo conInf = ContentInfo.getInstance(ASN1Sequence.fromByteArray(cr));
-        CMSSignedData data = new CMSSignedData(conInf);
-        byte[] name = (byte[])data.getSignedContent().getContent();
-            System.out.println(new String(name));
+//        String source = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><response><result id=14104694 code=\"15\"/></response>";
+//    String sign = utill.sign(source, prKK);
+//            System.out.println(sign);
+//        
+//        String sig = "LIULbtuqLOJwvOJP7ZfJ8pVOcZkT080rsSqFN+nxxBW+cc7HIbnjgzAQMapa7WvF+hHc4e0jzKx0J7O9uJ5mcaMz4xpe/T1Ha+UAWmeKOp4pM8On3wuYPkYdD9ZvIapNvzPbF3+GM1UwyTh79aG5+HwaqrRPLF506mGlwD27/uU=";
+//    boolean verify = utill.verify(source, sig, pubKK);
+//    System.out.println(verify);
+    
+    
+    
+////retrive object from byte array
+//        ContentInfo conInf = ContentInfo.getInstance(ASN1Sequence.fromByteArray(cr));
+//        CMSSignedData data = new CMSSignedData(conInf);
+//        byte[] name = (byte[])data.getSignedContent().getContent();
+//            System.out.println(new String(name));
 
         } catch (Exception ex) {
             Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
