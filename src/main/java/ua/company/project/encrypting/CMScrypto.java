@@ -14,9 +14,11 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bouncycastle.asn1.DERObjectIdentifier;
 import org.bouncycastle.asn1.cms.ContentInfo;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaCertStore;
@@ -61,10 +63,10 @@ public class CMScrypto {
                     new JcaDigestCalculatorProviderBuilder().build()
             ).build(signer, cert));
 //            signedDataGenerator.addCertificates(certStore);   // optional
+            
             CMSSignedData signedData = signedDataGenerator.generate(sTypedData, true);
             
-            
-                
+                       
 //            Store certificates = signedData.getCertificates();/// if signed data contain cert cerin
 //            X509CertificateHolder cert1 = (X509CertificateHolder) certificates.getMatches(signInfo.getSID()).iterator().next();
           
@@ -74,6 +76,15 @@ public class CMScrypto {
 //            System.out.println(verify);
             
             return signedData.getEncoded();
+            /*
+            get signed information back
+            byte[] cr = signedData.getEncoded();
+            ContentInfo conInf = ContentInfo.getInstance(ASN1Sequence.fromByteArray(cr));
+            CMSSignedData data = new CMSSignedData(conInf);
+            byte[] name = (byte[])data.getSignedContent().getContent();
+            System.out.println(new String(name));
+             */
+            
         } catch (UnsupportedEncodingException | CertificateEncodingException | OperatorCreationException | CMSException ex) {
             Logger.getLogger(CMScrypto.class.getName()).log(Level.SEVERE, null, ex);
         }

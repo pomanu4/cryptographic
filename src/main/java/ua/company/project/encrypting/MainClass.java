@@ -1,8 +1,14 @@
 package ua.company.project.encrypting;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -11,6 +17,7 @@ import java.security.Signature;
 import java.security.SignatureException;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.transform.Transformer;
@@ -83,31 +90,54 @@ Security.addProvider(new BouncyCastleProvider());
 //            System.out.println(signDocument);            
 //            boolean verifyDocument = rsag.verifyDocument(publicKey, doc);
 //            System.out.println(verifyDocument);
-    PrivateKey prK = rsag.getPrivateKeyFromFile("D:\\garbage\\CMStest\\private.pem");
+    PrivateKey prK = rsag.getPrivateKeyFromFile("D:\\garbage\\private.pem");
     X509Certificate cert = rsag.getCertificate("D:\\garbage\\CMStest\\cert.pem");
     PublicKey pubK = rsag.getPublicKeyFromFile("D:\\garbage\\CMStest\\pubkey.pem");
-    PublicKey pubKK = rsag.getPublicKeyFromFile("D:\\garbage\\CMStest\\publicKey.pem");
-    PrivateKey prKK = rsag.getPrivateRSAkeyFromFile("D:\\garbage\\CMStest\\privateKey.pem");
+    PublicKey pubKK = rsag.getPublicKeyFromFile("D:\\garbage\\publicKey.pem");
+//    PrivateKey prKK = rsag.getPrivateRSAkeyFromFile("D:\\garbageKey\\privateKeyP.pem");
+    PrivateKey prKK = rsag.getPrivateRSAkeyFromFile("D:\\garbage\\privateQWERTY.pem");
+    
         
         CMScrypto cms = new CMScrypto();
 //        byte[] cr = cms.getCryptoMessage("hello kitty", cert, prKK, pubK);
-        
-        
-//        String source = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><response><result id=14104694 code=\"15\"/></response>";
-//    String sign = utill.sign(source, prKK);
-//            System.out.println(sign);
-//        
-//        String sig = "LIULbtuqLOJwvOJP7ZfJ8pVOcZkT080rsSqFN+nxxBW+cc7HIbnjgzAQMapa7WvF+hHc4e0jzKx0J7O9uJ5mcaMz4xpe/T1Ha+UAWmeKOp4pM8On3wuYPkYdD9ZvIapNvzPbF3+GM1UwyTh79aG5+HwaqrRPLF506mGlwD27/uU=";
-//    boolean verify = utill.verify(source, sig, pubKK);
-//    System.out.println(verify);
-    
-    
-    
+
 ////retrive object from byte array
 //        ContentInfo conInf = ContentInfo.getInstance(ASN1Sequence.fromByteArray(cr));
 //        CMSSignedData data = new CMSSignedData(conInf);
 //        byte[] name = (byte[])data.getSignedContent().getContent();
 //            System.out.println(new String(name));
+
+
+//    List<String> readAllLines = Files.readAllLines(Paths.get("D:\\garbage\\doc.txt"));
+//    StringBuilder builder = new StringBuilder();
+//            for (String readAllLine : readAllLines) {
+//               builder.append(readAllLine);
+//            }
+//    String str = builder.toString();
+//    byte[] byt = Files.readAllBytes(Paths.get("D:\\garbage\\doc.txt"));
+//    String str = new String(byt, "utf-8");
+//            System.out.println(str);
+String filepath = "D:\\garbage\\familnyAdvanced.txt";
+    byte[] bb = Files.readAllBytes(Paths.get(filepath));
+    String req = new String(bb, "utf-8");
+            System.out.println(req);
+
+String source = "";
+    String sign = utill.sign(req, prKK);
+            System.out.println(sign);
+        
+     
+    
+//        String sig = "uZDQa7PhZKeduQk0VxqLyF4HXARpwe3VZGtDcVauhgbFL7isb0l5FRs0dZeoc+nuTq33f5HwvcqOU6E8iDwHt34UVzJpr5JmnmCsjiWxUxLRrB/RYQyvss36j2QT2bZqposLJWtJn2SXWAFwllN5O0nEqtMRwsT7BtPRSFPMfcs=";
+//    boolean verify = utill.verify(source, sig, pubKK);
+//    System.out.println(verify);
+
+    
+//String filePath = "C:\\Users\\Leo-admin\\Downloads\\Telegram Desktop\\test.png";
+//File file = new File(filePath);
+//    byte[] all = Files.readAllBytes(file.toPath());
+//    String string = new String(Base64.getEncoder().encode(all));
+//            System.out.println(string.length());
 
         } catch (Exception ex) {
             Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
