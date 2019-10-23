@@ -57,7 +57,7 @@ public class SFTconnect {
 //            });
             
             FileSystemManager fsManager = VFS.getManager();
-            FileObject remoteFileObject = fsManager.resolveFile("sftp://roman_k:5FKZ&5d3dm#3@mcabinet.lgaming.net:4022/home/roman_k/"  + "doc.txt", fsOptions);
+            FileObject remoteFileObject = fsManager.resolveFile("sftp://roman_k:*****3@mcabinet.lgaming.net:5022/home/roman_k/"  + "doc.txt", fsOptions);
             CheckedOutputStream checkedOutputStream = new CheckedOutputStream(remoteFileObject.getContent().getOutputStream(), new CRC32());
             File file = new File("D:\\TASKS\\GPrecons\\GPoperations.txt");
             IOUtils.copy(new FileInputStream(file), checkedOutputStream);
