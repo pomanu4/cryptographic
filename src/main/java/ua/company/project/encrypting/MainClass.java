@@ -106,6 +106,7 @@ Security.addProvider(new BouncyCastleProvider());
         byte[] name = (byte[])data.getSignedContent().getContent();
             System.out.println(new String(cr));
 
+            
 
 //    List<String> readAllLines = Files.readAllLines(Paths.get("D:\\garbage\\doc.txt"));
 //    StringBuilder builder = new StringBuilder();
