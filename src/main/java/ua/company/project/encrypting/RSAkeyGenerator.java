@@ -53,6 +53,7 @@ import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import javax.xml.crypto.dsig.spec.TransformParameterSpec;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -159,44 +160,34 @@ public class RSAkeyGenerator {
         }
     }
     
-    public PrivateKey getPrivateRSAkeyFromFile(String filePath, String password){
+    public PrivateKey getPrivateRSAkeyFromFile(String filePath, String password) {
         Security.addProvider(new BouncyCastleProvider());
         Path path = Paths.get(filePath);
         final String privateKeyPassword = password;
         PasswordFinder finder = () -> {
-                if (privateKeyPassword != null) {
-                    return privateKeyPassword.toCharArray();
-                } else {
-                    return new char[0];
-                }
-            };
-//        try(PEMReader reader = new PEMReader(new InputStreamReader(new FileInputStream(path.toFile())), finder);) {
-        try(PEMParser reader = new PEMParser(new InputStreamReader(new FileInputStream(path.toFile())))) {
+            if (privateKeyPassword != null) {
+                return privateKeyPassword.toCharArray();
+            } else {
+                return new char[0];
+            }
+        };
+        try (PEMParser reader = new PEMParser(new InputStreamReader(new FileInputStream(path.toFile())))) {
             PrivateKey privK = null;
             JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
             PEMDecryptorProvider decryptor = new JcePEMDecryptorProviderBuilder().build(finder.getPassword());
             Object keyObj = reader.readObject();
-            if(keyObj instanceof PEMKeyPair){
-               KeyPair pair = converter.getKeyPair((PEMKeyPair)keyObj);
-               privK = pair.getPrivate();
-            }else if(keyObj instanceof PEMEncryptedKeyPair){
-                KeyPair keyPairEnc = converter.getKeyPair(((PEMEncryptedKeyPair)keyObj).decryptKeyPair(decryptor));
+            if (keyObj instanceof PEMKeyPair) {
+                KeyPair pair = converter.getKeyPair((PEMKeyPair) keyObj);
+                privK = pair.getPrivate();
+            } else if (keyObj instanceof PEMEncryptedKeyPair) {
+                KeyPair keyPairEnc = converter.getKeyPair(((PEMEncryptedKeyPair) keyObj).decryptKeyPair(decryptor));
                 privK = keyPairEnc.getPrivate();
             }
-            /// caution on key header, need exaсly ----RSA privatr key----
-            
-            
-            
-            
-            /// caution on key header, need exaсly ----privatr key----
-//                privK = (PrivateKey)reader.readObject();
-            return privK;   
+            return privK;
         } catch (IOException ex) {
             return null;
         }
     }
-    
-    
     
     public PublicKey getPublicKeyFromFile(String filePath){
         Security.addProvider(new BouncyCastleProvider());
@@ -209,9 +200,11 @@ public class RSAkeyGenerator {
                     return new char[0];
                 }
             };
-        try(PEMReader reader = new PEMReader(new InputStreamReader(new FileInputStream(path.toFile())), finder);) {
+        JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
+        try(PEMParser parser = new PEMParser(new InputStreamReader(new FileInputStream(path.toFile())))) {
             PublicKey pubK = null;
-            pubK = (PublicKey) reader.readObject();
+            Object keyObj = parser.readObject();
+            pubK = converter.getPublicKey((SubjectPublicKeyInfo)keyObj);
             return pubK;   
         } catch (IOException ex) {
             return null;

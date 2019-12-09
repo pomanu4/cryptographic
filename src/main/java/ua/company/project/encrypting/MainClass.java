@@ -90,12 +90,11 @@ Security.addProvider(new BouncyCastleProvider());
 //            System.out.println(signDocument);            
 //            boolean verifyDocument = rsag.verifyDocument(publicKey, doc);
 //            System.out.println(verifyDocument);
-    PrivateKey prK = rsag.getPrivateKeyFromFile("D:\\garbage\\private.pem");
     X509Certificate cert = rsag.getCertificate("D:\\garbage\\CMStest\\cert.pem");
     PublicKey pubK = rsag.getPublicKeyFromFile("D:\\garbage\\CMStest\\pubkey.pem");
     PublicKey pubKK = rsag.getPublicKeyFromFile("D:\\garbage\\xxxpublic.pem");
-    PrivateKey prKK = rsag.getPrivateRSAkeyFromFile("D:\\garbage\\CMStest\\private.key", "qwerty");
-//    PrivateKey prKK = rsag.getPrivateRSAkeyFromFile("D:\\garbage\\rsaPrivate.pem");
+//    PrivateKey prKK = rsag.getPrivateRSAkeyFromFile("D:\\garbage\\CMStest\\private.key", "qwerty");
+    PrivateKey prKK = rsag.getPrivateRSAkeyFromFile("D:\\garbage\\rsaPrivate.pem", null);
     
         
         CMScrypto cms = new CMScrypto();
@@ -146,17 +145,17 @@ String source = "<?xml version=\"1.0\" encoding=\"windows-1251\"?>\n" +
 "</MerchantData>\n" +
 "</Data>";
     
-//    String generateHash = DocUtill.generateHash(source);
-//            System.out.println(generateHash);
+    String generateHash = DocUtill.generateHash(source);
+            System.out.println(generateHash);
     
-//    String sign = utill.sign(source, prKK);
-//            System.out.println(sign);
+    String sign = utill.sign(source, prKK);
+            System.out.println(sign);
         
      
     
-//        String sig = "THmMap0vO8rU4E9C7GORejwTuGhz+jgTFu2c3zO+ryFAQlnCmo3UfbqntdKnBAb5FFS1uFUootG4j1hmr6JXSUoU/S5F96cuCthvRMGl0sd8btXRTkA2osxen2lO1GNxp8hmLtkf8AHZFelY8SSoKINlO3YmjjtD/A+dYI2eZIQ=";
-//    boolean verify = utill.verify(source, sig, pubKK);
-//    System.out.println(verify);
+        String sig = "THmMap0vO8rU4E9C7GORejwTuGhz+jgTFu2c3zO+ryFAQlnCmo3UfbqntdKnBAb5FFS1uFUootG4j1hmr6JXSUoU/S5F96cuCthvRMGl0sd8btXRTkA2osxen2lO1GNxp8hmLtkf8AHZFelY8SSoKINlO3YmjjtD/A+dYI2eZIQ=";
+    boolean verify = utill.verify(source, sig, pubKK);
+    System.out.println(verify);
 
     
 //String filePath = "C:\\Users\\Leo-admin\\Downloads\\Telegram Desktop\\test.png";
