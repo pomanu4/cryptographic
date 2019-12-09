@@ -1,5 +1,9 @@
 package ua.company.project.encrypting.sftp;
 
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.logging.Level;
@@ -71,7 +75,8 @@ public class SFTconnect {
 //            channel.connect();
 //            ChannelSftp sftpCann = (ChannelSftp) channel;
 //            sftpCann.put("D:\\garbage\\doc.txt", "/home/roman_k/report/");
-//            
+            
+            
 //            sftpCann.exit();
 //            channel.disconnect();
 //            session.disconnect(); 

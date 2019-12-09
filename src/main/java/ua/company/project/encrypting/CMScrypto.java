@@ -66,12 +66,14 @@ public class CMScrypto {
             
             CMSSignedData signedData = signedDataGenerator.generate(sTypedData, true);
             
-                       
+             
+            SignerInformation signInfo = (SignerInformation)signedData.getSignerInfos().getSigners().iterator().next();
+              
 //            Store certificates = signedData.getCertificates();/// if signed data contain cert cerin
 //            X509CertificateHolder cert1 = (X509CertificateHolder) certificates.getMatches(signInfo.getSID()).iterator().next();
           
 
-//            SignerInformation signInfo = (SignerInformation)signedData.getSignerInfos().getSigners().iterator().next();
+          
 //            boolean verify = signInfo.verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(cert));
 //            System.out.println(verify);
             

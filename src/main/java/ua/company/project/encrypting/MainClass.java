@@ -93,19 +93,19 @@ Security.addProvider(new BouncyCastleProvider());
     PrivateKey prK = rsag.getPrivateKeyFromFile("D:\\garbage\\private.pem");
     X509Certificate cert = rsag.getCertificate("D:\\garbage\\CMStest\\cert.pem");
     PublicKey pubK = rsag.getPublicKeyFromFile("D:\\garbage\\CMStest\\pubkey.pem");
-    PublicKey pubKK = rsag.getPublicKeyFromFile("D:\\garbage\\publicKey.pem");
-//    PrivateKey prKK = rsag.getPrivateRSAkeyFromFile("D:\\garbageKey\\privateKeyP.pem");
-    PrivateKey prKK = rsag.getPrivateRSAkeyFromFile("D:\\garbage\\privateQWERTY.pem");
+    PublicKey pubKK = rsag.getPublicKeyFromFile("D:\\garbage\\xxxpublic.pem");
+    PrivateKey prKK = rsag.getPrivateRSAkeyFromFile("D:\\garbage\\CMStest\\private.key", "qwerty");
+//    PrivateKey prKK = rsag.getPrivateRSAkeyFromFile("D:\\garbage\\rsaPrivate.pem");
     
         
         CMScrypto cms = new CMScrypto();
-//        byte[] cr = cms.getCryptoMessage("hello kitty", cert, prKK, pubK);
+        byte[] cr = cms.getCryptoMessage("hello kitty", cert, prKK, null);
 
-////retrive object from byte array
-//        ContentInfo conInf = ContentInfo.getInstance(ASN1Sequence.fromByteArray(cr));
-//        CMSSignedData data = new CMSSignedData(conInf);
-//        byte[] name = (byte[])data.getSignedContent().getContent();
-//            System.out.println(new String(name));
+//retrive object from byte array
+        ContentInfo conInf = ContentInfo.getInstance(ASN1Sequence.fromByteArray(cr));
+        CMSSignedData data = new CMSSignedData(conInf);
+        byte[] name = (byte[])data.getSignedContent().getContent();
+            System.out.println(new String(cr));
 
 
 //    List<String> readAllLines = Files.readAllLines(Paths.get("D:\\garbage\\doc.txt"));
@@ -117,18 +117,44 @@ Security.addProvider(new BouncyCastleProvider());
 //    byte[] byt = Files.readAllBytes(Paths.get("D:\\garbage\\doc.txt"));
 //    String str = new String(byt, "utf-8");
 //            System.out.println(str);
-String filepath = "D:\\garbage\\familnyAdvanced.txt";
-    byte[] bb = Files.readAllBytes(Paths.get(filepath));
-    String req = new String(bb, "utf-8");
-            System.out.println(req);
+//String filepath = "D:\\garbage\\familnyAdvanced.txt";
+//    byte[] bb = Files.readAllBytes(Paths.get(filepath));
+//    String req = new String(bb, "utf-8");
+//            System.out.println(req);
 
-String source = "";
-    String sign = utill.sign(req, prKK);
-            System.out.println(sign);
+String source = "<?xml version=\"1.0\" encoding=\"windows-1251\"?>\n" +
+"<Data>\n" +
+"<OperationData>\n" +
+"<OperationType>PS_MerchantRegistrate</OperationType>\n" +
+"<LocalDate>26.11.2019 17:11:21</LocalDate>\n" +
+"<TerminalID>SwiftGarant_test</TerminalID>\n" +
+"<ExtTranID>1</ExtTranID>\n" +
+"<SenderSign></SenderSign>\n" +
+"</OperationData>\n" +
+"<MerchantData>\n" +
+"<MemberMerchantID>leo_sub_077</MemberMerchantID>\n" +
+"<MemberSubProviderID></MemberSubProviderID>\n" +
+"<RegionCod></RegionCod>\n" +
+"<MerchantOKPO>38536980</MerchantOKPO>\n" +
+"<MerchantName>leo_sub</MerchantName>\n" +
+"<ContractNumber>qwerty-1234</ContractNumber>\n" +
+"<ContractDate>25.05.2013</ContractDate>\n" +
+"<AccountMFO>321842</AccountMFO>\n" +
+"<AccountNumber>26002053146681</AccountNumber>\n" +
+"<MemberIsActive>1</MemberIsActive>\n" +
+"<MemberLockComment></MemberLockComment>\n" +
+"</MerchantData>\n" +
+"</Data>";
+    
+//    String generateHash = DocUtill.generateHash(source);
+//            System.out.println(generateHash);
+    
+//    String sign = utill.sign(source, prKK);
+//            System.out.println(sign);
         
      
     
-//        String sig = "uZDQa7PhZKeduQk0VxqLyF4HXARpwe3VZGtDcVauhgbFL7isb0l5FRs0dZeoc+nuTq33f5HwvcqOU6E8iDwHt34UVzJpr5JmnmCsjiWxUxLRrB/RYQyvss36j2QT2bZqposLJWtJn2SXWAFwllN5O0nEqtMRwsT7BtPRSFPMfcs=";
+//        String sig = "THmMap0vO8rU4E9C7GORejwTuGhz+jgTFu2c3zO+ryFAQlnCmo3UfbqntdKnBAb5FFS1uFUootG4j1hmr6JXSUoU/S5F96cuCthvRMGl0sd8btXRTkA2osxen2lO1GNxp8hmLtkf8AHZFelY8SSoKINlO3YmjjtD/A+dYI2eZIQ=";
 //    boolean verify = utill.verify(source, sig, pubKK);
 //    System.out.println(verify);
 
