@@ -13,6 +13,25 @@ public class FineTunedHttp {
 	                null,
 	                NoopHostnameVerifier.INSTANCE);
 	        /// create registry
+	        
+	        try (InputStream in = Files.newInputStream(Paths.get("D:\\garbage\\transit\\portmone\\Leogaming.p12"))) {
+
+	            KeyStore keystore = KeyStore.getInstance("PKCS12");
+	            keystore.load(in, "****".toCharArray());
+	            
+	            context = new SSLContextBuilder()
+	                    .loadKeyMaterial(keystore, "****".toCharArray())
+	                    .loadTrustMaterial(null, new TrustSelfSignedStrategy())
+	                    .build();
+
+	            SSLConnectionSocketFactory sslConnectionFactory = new SSLConnectionSocketFactory(sslContext,
+	                    new String[]{"SSLv2Hello", "SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"}, null,
+	                    SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+
+	            secketFactoryRegistryBuilder.register("https", sslConnectionFactory);
+	        } catch (IOException | KeyStoreException | UnrecoverableKeyException | NoSuchAlgorithmException | CertificateException e) {
+	            e.printStackTrace();
+		}
 	        RegistryBuilder<ConnectionSocketFactory> socketFactoryRegistryBuilder = RegistryBuilder.<ConnectionSocketFactory>create()
 	                .register("http", PlainConnectionSocketFactory.INSTANCE)
 	                .register("https", factory);
